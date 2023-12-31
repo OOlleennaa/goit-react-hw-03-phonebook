@@ -12,9 +12,20 @@ import {
   Button,
 } from './ContactsForm..styled';
 
+function validatePhone(phone) {
+  let regex = /^(?:\+380\d{9}|0\d{9})$/;
+  return regex.test(phone);
+}
+
 const ContactsSchema = Yup.object().shape({
   name: Yup.string().required('* Name is required'),
-  number: Yup.string().min(6).max(10).required(''),
+  number: Yup.string()
+    .min(10)
+    .max(13)
+    .test('phone', '* Invalid phone number', function (value) {
+      return validatePhone(value);
+    })
+    .required('* Phone number is required'),
 });
 
 const initialValues = { name: '', number: '' };
@@ -41,7 +52,7 @@ export const ContactsForm = ({ onAdd }) => {
 
           <StyledLable>
             Number
-            <StyledField name="number" placeholder="Enter Phone" />
+            <StyledField name="number" placeholder="+380730990101" />
             <StyledError component="div" name="number" />
           </StyledLable>
 
